@@ -6,6 +6,7 @@ import tipoTelefoneApi from '../../services/tipoTelefone';
 import './styles.css';
 import { withFormik, Form, Field, ErrorMessage } from 'formik';
 import Header from '../../components/header';
+import { Link } from 'react-router-dom';
 
 
 const schema = Yup.object().shape({
@@ -125,7 +126,7 @@ export default class ClienteForm extends React.Component {
     render() {
         return (
             <div className="cliente-form">
-                {/* <Header /> */}
+                <Header />
 
                 <div className="titulo">
                     <h2>Cadastro de cliente</h2>
@@ -134,6 +135,8 @@ export default class ClienteForm extends React.Component {
                 <hr />
 
                 <MyForm tiposTelefone={this.state.tiposTelefone} />
+
+                <Link to="/clientes">Voltar</Link>
             </div>
         )
     }

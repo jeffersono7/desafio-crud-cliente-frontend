@@ -19,12 +19,18 @@ export default class Cliente extends React.Component {
         const response = await clienteApi.obterTodos();
 
         this.setState({ data: response.data });
+
+        console.log(response);
     }
 
     async excluirCliente(cliente) {
         const { id } = cliente;
 
         await clienteApi.deletar(id);
+
+        const { data } = await clienteApi.obterTodos();
+
+        this.setState({ data });
     }
 
     render() {
@@ -37,15 +43,15 @@ export default class Cliente extends React.Component {
                         <Header />
 
                         <div className="main-container">
-                            {this.state.data > 0 ? (
+                            {this.state.data.length > 0 ? (
                                 <div className="clientes">
                                     {this.state.data.map(cliente => (
-                                        <article>
+                                        <article key={cliente.id}>
                                             <h3>{cliente.nome}</h3>
                                             <label>CPF:</label>
                                             {cliente.cpf}
 
-                                            <button type="button" onClick={() => this.excluirCliente(cliente)}>Excluir</button>
+                                            <button className="excluir" type="button" onClick={() => this.excluirCliente(cliente)}>Excluir</button>
                                         </article>
                                     ))}
                                 </div>

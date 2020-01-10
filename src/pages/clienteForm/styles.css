@@ -12,6 +12,14 @@
     flex-direction: column;
 }
 
+
+.cliente-container form div {
+    width: 100%;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+}
+
 .cliente-container form input {
     margin-top: 20px;
     border: 1px solid #ddd;
@@ -36,4 +44,10 @@
     font-weight: bold;
     color: #FFF;
     cursor: pointer;
+}
+
+.titulo {
+    display: flex;
+    justify-content: center;
+    color: rgb(54, 54, 54);
 }

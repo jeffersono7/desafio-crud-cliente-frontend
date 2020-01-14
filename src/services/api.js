@@ -13,7 +13,7 @@ const getHeadersToken = (token) => ({
     Authorization: `Bearer ${token}`,
 })
 
-const api = axios.create({ baseURL: 'http://localhost:8080' });
+const api = axios.create({ baseURL: 'http://localhost:8080/api' });
 
 const ignoreUrlBase = 'https://viacep.com.br';
 

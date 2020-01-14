@@ -21,7 +21,11 @@ export default class Cliente extends React.Component {
     async excluirCliente(cliente) {
         const { id } = cliente;
 
-        await clienteApi.deletar(id);
+        try {
+            await clienteApi.deletar(id);
+        } catch (e) {
+            alert('Houve um erro ao tentar excluir cliente!');
+        }
 
         const { data } = await clienteApi.obterTodos();
 

@@ -50,24 +50,30 @@ const handleSubmit = async (values) => {
 
     try {
         await clienteApi.criar(values);
-        useHistory.push('/clientes');
         alert('Cliente cadastrado com sucesso!');
     } catch (e) {
         alert('Erro ao cadastrar cliente!');
     }
 }
 
-const handleBlurCep = async (event) => {
+const handleBlurCep = async (event, { setFieldValues, ...props }) => {
     const cep = event.target.value;
+    console.log(props);
 
     try {
         const {
             logradouro,
             complemento,
             bairro,
-            localidade,
+            localidade: cidade,
             uf
         } = await viaCepApi.consultarCep(cep);
+
+        setFieldValues('logradouro', logradouro);
+        setFieldValues('complemento', complemento);
+        setFieldValues('bairro', bairro);
+        setFieldValues('cidade', cidade);
+        setFieldValues('uf', uf);
     } catch (e) { }
 }
 
@@ -108,7 +114,7 @@ const form = props => {
                 </div>
 
                 <div className="field">
-                    <Field name="cep" onBlur={handleBlurCep} placeholder="CEP" />
+                    <Field name="cep" onBlur={e => handleBlurCep(e, props)} placeholder="CEP" />
                     <br />
                     <ErrorMessage className="field-error" component="span" name="cep" />
                 </div>

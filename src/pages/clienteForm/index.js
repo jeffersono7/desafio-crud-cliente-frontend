@@ -6,7 +6,7 @@ import clienteApi from '../../services/cliente';
 import './styles.css';
 import { withFormik, Form, Field, ErrorMessage, FieldArray } from 'formik';
 import Header from '../../components/header';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { viaCepApi } from '../../services/viaCepApi';
 
 

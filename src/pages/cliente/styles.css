@@ -8,3 +8,21 @@ button.excluir {
     color: #FFF;
     cursor: pointer;
 }
+
+.logout {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    align-content: center;
+}
+
+.logout button {
+    border: 0px;
+    background-color: rgb(100, 100, 100);
+    border-radius: 5px;
+    height: 20px;
+    margin: 5px;
+    color: white;
+    font-family: sans-serif;
+    width: 76px;
+}

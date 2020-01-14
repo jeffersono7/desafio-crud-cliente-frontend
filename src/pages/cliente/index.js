@@ -3,12 +3,13 @@ import React from 'react';
 import './styles.css';
 import Header from '../../components/header';
 import clienteApi from '../../services/cliente';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 export default class Cliente extends React.Component {
 
     state = {
-        data: []
+        data: [],
+        isAdmin: false
     }
 
     async componentDidMount() {
@@ -16,6 +17,16 @@ export default class Cliente extends React.Component {
         const response = await clienteApi.obterTodos();
 
         this.setState({ data: response.data });
+
+        const token = localStorage.getItem('token');
+
+        if (token) {
+            let payload = token.split('.')[1];
+            payload = atob(payload);
+            payload = JSON.parse(payload);
+
+            this.setState({ isAdmin: payload.sub === 'admin' });
+        }
     }
 
     async excluirCliente(cliente) {
@@ -32,11 +43,20 @@ export default class Cliente extends React.Component {
         this.setState({ data });
     }
 
+    logout() {
+        localStorage.removeItem('token');
+        window.location.href = window.location.origin;
+    }
+
     render() {
 
         return (
             <div>
                 <Header />
+
+                <div className="logout">
+                    <button type="button" onClick={this.logout}>Logout</button>
+                </div>
 
                 <div className="main-container">
                     {this.state.data.length > 0 ? (
@@ -56,7 +76,10 @@ export default class Cliente extends React.Component {
                         )}
                 </div>
 
-                <Link to="/clientes/new">Cadastrar</Link>
+                {this.state.isAdmin ? (
+                    <Link to="/clientes/new">Cadastrar</Link>
+                ) : <div></div>
+                }
             </div>
         )
     }

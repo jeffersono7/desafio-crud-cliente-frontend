@@ -7,6 +7,7 @@ import './styles.css';
 import { withFormik, Form, Field, ErrorMessage, FieldArray } from 'formik';
 import Header from '../../components/header';
 import { Link, useHistory } from 'react-router-dom';
+import { viaCepApi } from '../../services/viaCepApi';
 
 
 const schema = Yup.object().shape({
@@ -37,18 +38,37 @@ const schema = Yup.object().shape({
         Yup.object().shape({
             numero: Yup.string().required('Campo obrigatório')
         })
-    ).min(1, 'Necessário pelo menos um telefone!')
+    ).min(1, 'Necessário pelo menos um telefone!'),
+    email: Yup.array().of(
+        Yup.object().shape({
+            nome: Yup.string().email('Email inválido!').required('Campo obrigatório')
+        })
+    ).min(1, 'Necessário pelo menos um email!')
 });
 
 const handleSubmit = async (values) => {
-    console.log(values);
 
     try {
         await clienteApi.criar(values);
         useHistory.push('/clientes');
+        alert('Cliente cadastrado com sucesso!');
     } catch (e) {
         alert('Erro ao cadastrar cliente!');
     }
+}
+
+const handleBlurCep = async (event) => {
+    const cep = event.target.value;
+
+    try {
+        const {
+            logradouro,
+            complemento,
+            bairro,
+            localidade,
+            uf
+        } = await viaCepApi.consultarCep(cep);
+    } catch (e) { }
 }
 
 const enhanceWithFormik = withFormik({
@@ -61,7 +81,8 @@ const enhanceWithFormik = withFormik({
         cidade: '',
         uf: '',
         complemento: '',
-        telefone: [{ numero: '', tipoTelefone: { id: 1 } }]
+        telefone: [{ numero: '', tipoTelefone: { id: 1 } }],
+        email: [{ nome: '' }]
     }),
     handleSubmit: handleSubmit,
     validateOnChange: true,
@@ -87,7 +108,7 @@ const form = props => {
                 </div>
 
                 <div className="field">
-                    <Field name="cep" placeholder="CEP" />
+                    <Field name="cep" onBlur={handleBlurCep} placeholder="CEP" />
                     <br />
                     <ErrorMessage className="field-error" component="span" name="cep" />
                 </div>
@@ -122,7 +143,7 @@ const form = props => {
                     <ErrorMessage className="field-error" component="span" name="complemento" />
                 </div>
 
-                <div className="field field-telefones">
+                <div className="field">
                     Telefones:
                     <FieldArray name="telefone" render={arrayHelpers => (
                         <div className="telefones">
@@ -150,6 +171,30 @@ const form = props => {
                                     Adicionar telefone
                             </button>
 
+                            </div>
+                        </div>
+                    )} />
+                </div>
+
+                <div className="emails">
+                    Emails:
+                    <FieldArray name="email" render={arrayHelpers => (
+                        <div>
+                            {props.values.email.map((e, index) => (
+                                <div className="email" key={index}>
+
+                                    <div className="field">
+                                        <Field name={`email[${index}].nome`} placeholder="Email" />
+                                        <ErrorMessage className="field-error" component="span" name={`email[${index}].nome`} />
+                                    </div>
+
+                                    <button type="button" className="remover" onClick={() => index ? arrayHelpers.remove(index) : null}>-</button>
+
+                                </div>
+                            ))}
+
+                            <div className="adicionar">
+                                <button type="button" onClick={() => arrayHelpers.push({ nome: '' })}>Adicionar email</button>
                             </div>
                         </div>
                     )} />

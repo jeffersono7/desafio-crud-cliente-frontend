@@ -15,9 +15,16 @@ const getHeadersToken = (token) => ({
 
 const api = axios.create({ baseURL: 'http://localhost:8080' });
 
+const ignoreUrlBase = 'https://viacep.com.br';
+
 api.interceptors.request.use((request) => {
 
-    request.headers = getHeadersToken(getToken());
+    if (!request.url.includes(ignoreUrlBase)) {
+        request.headers = {
+            ...request.headers,
+            ...getHeadersToken(getToken()),
+        };
+    }
 
     return request;
 })
@@ -25,7 +32,7 @@ api.interceptors.request.use((request) => {
 api.interceptors.response.use((response) => {
 
     if (response.status === 401) {
-        console.log('token expired!');
+        window.location.href = window.location.origin;
     }
 
     return response;

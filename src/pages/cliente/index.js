@@ -16,8 +16,6 @@ export default class Cliente extends React.Component {
         const response = await clienteApi.obterTodos();
 
         this.setState({ data: response.data });
-
-        console.log(response);
     }
 
     async excluirCliente(cliente) {

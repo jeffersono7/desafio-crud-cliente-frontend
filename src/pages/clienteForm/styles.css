@@ -83,7 +83,12 @@ div.send button {
   flex: 1;
 }
 
-.telefone {
+.emails {
+  flex: 1;
+  min-width: 100%;
+}
+
+.telefone, .email {
   display: flex;
   align-items: baseline;
   justify-content: flex-start;

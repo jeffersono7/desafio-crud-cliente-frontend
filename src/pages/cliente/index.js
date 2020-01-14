@@ -1,7 +1,4 @@
 import React from 'react';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
 
 import './styles.css';
 import Header from '../../components/header';
@@ -36,34 +33,29 @@ export default class Cliente extends React.Component {
     render() {
 
         return (
-            <React.Fragment>
-                <CssBaseline />
-                <Container maxWidth="sm">
-                    <Typography component="div" style={{ backgroundColor: '#dfdfdf', height: '100vh' }}>
-                        <Header />
+            <div>
+                <Header />
 
-                        <div className="main-container">
-                            {this.state.data.length > 0 ? (
-                                <div className="clientes">
-                                    {this.state.data.map(cliente => (
-                                        <article key={cliente.id}>
-                                            <h3>{cliente.nome}</h3>
-                                            <label>CPF:</label>
-                                            {cliente.cpf}
+                <div className="main-container">
+                    {this.state.data.length > 0 ? (
+                        <div className="clientes">
+                            {this.state.data.map(cliente => (
+                                <article key={cliente.id}>
+                                    <h3>{cliente.nome}</h3>
+                                    <label>CPF:</label>
+                                    {cliente.cpf}
 
-                                            <button className="excluir" type="button" onClick={() => this.excluirCliente(cliente)}>Excluir</button>
-                                        </article>
-                                    ))}
-                                </div>
-                            ) : (
-                                    <div className="empty">Nenhum cliente cadastrado!</div>
-                                )}
+                                    <button className="excluir" type="button" onClick={() => this.excluirCliente(cliente)}>Excluir</button>
+                                </article>
+                            ))}
                         </div>
+                    ) : (
+                            <div className="empty">Nenhum cliente cadastrado!</div>
+                        )}
+                </div>
 
-                        <Link to="/clientes/new">Cadastrar</Link>
-                    </Typography>
-                </Container>
-            </React.Fragment>
+                <Link to="/clientes/new">Cadastrar</Link>
+            </div>
         )
     }
 }

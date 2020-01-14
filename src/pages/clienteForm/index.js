@@ -1,12 +1,12 @@
 import React from 'react';
 import * as Yup from 'yup';
-import clienteApi from '../../services/cliente';
 import tipoTelefoneApi from '../../services/tipoTelefone';
+import clienteApi from '../../services/cliente';
 
 import './styles.css';
-import { withFormik, Form, Field, ErrorMessage } from 'formik';
+import { withFormik, Form, Field, ErrorMessage, FieldArray } from 'formik';
 import Header from '../../components/header';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 
 const schema = Yup.object().shape({
@@ -32,17 +32,37 @@ const schema = Yup.object().shape({
         .required('Campo obrigatório')
         .min(2)
         .max(2),
-    complemento: Yup.string()
+    complemento: Yup.string(),
+    telefone: Yup.array().of(
+        Yup.object().shape({
+            numero: Yup.string().required('Campo obrigatório')
+        })
+    ).min(1, 'Necessário pelo menos um telefone!')
 });
 
-const handleSubmit = (values) => {
-    const cliente = {};
-
+const handleSubmit = async (values) => {
     console.log(values);
+
+    try {
+        await clienteApi.criar(values);
+        useHistory.push('/clientes');
+    } catch (e) {
+        alert('Erro ao cadastrar cliente!');
+    }
 }
 
 const enhanceWithFormik = withFormik({
-    mapPropsToValues: () => ({ nome: '', cpf: '' }),
+    mapPropsToValues: () => ({
+        nome: '',
+        cpf: '',
+        cep: '',
+        logradouro: '',
+        bairro: '',
+        cidade: '',
+        uf: '',
+        complemento: '',
+        telefone: [{ numero: '', tipoTelefone: { id: 1 } }]
+    }),
     handleSubmit: handleSubmit,
     validateOnChange: true,
     validationSchema: schema
@@ -54,55 +74,90 @@ const form = props => {
         <div className="cliente-container">
 
             <Form>
-                <div>
+                <div className="field">
                     <Field name="nome" placeholder="Nome" />
                     <br />
-                    <ErrorMessage name="nome" />
+                    <ErrorMessage className="field-error" component="span" name="nome" />
                 </div>
 
-                <div>
+                <div className="field">
                     <Field name="cpf" placeholder="CPF" />
                     <br />
-                    <ErrorMessage name="cpf" />
+                    <ErrorMessage className="field-error" component="span" name="cpf" />
                 </div>
 
-                <div>
+                <div className="field">
                     <Field name="cep" placeholder="CEP" />
                     <br />
-                    <ErrorMessage name="cep" />
+                    <ErrorMessage className="field-error" component="span" name="cep" />
                 </div>
 
-                <div>
+                <div className="field">
                     <Field name="logradouro" placeholder="Logradouro" />
                     <br />
-                    <ErrorMessage name="logradouro" />
+                    <ErrorMessage className="field-error" component="span" name="logradouro" />
                 </div>
 
-                <div>
+                <div className="field">
                     <Field name="bairro" placeholder="Bairro" />
                     <br />
-                    <ErrorMessage name="bairro" />
+                    <ErrorMessage className="field-error" component="span" name="bairro" />
                 </div>
 
-                <div>
+                <div className="field">
                     <Field name="cidade" placeholder="Cidade" />
                     <br />
-                    <ErrorMessage name="cidade" />
+                    <ErrorMessage className="field-error" component="span" name="cidade" />
                 </div>
 
-                <div>
+                <div className="field">
                     <Field name="uf" placeholder="UF" />
                     <br />
-                    <ErrorMessage name="uf" />
+                    <ErrorMessage className="field-error" component="span" name="uf" />
                 </div>
 
-                <div>
+                <div className="field">
                     <Field name="complemento" placeholder="Complemento" />
                     <br />
-                    <ErrorMessage name="complemento" />
+                    <ErrorMessage className="field-error" component="span" name="complemento" />
                 </div>
 
-                <button type="submit">Enviar</button>
+                <div className="field field-telefones">
+                    Telefones:
+                    <FieldArray name="telefone" render={arrayHelpers => (
+                        <div className="telefones">
+                            {props.values.telefone.map((t, index) => (
+                                <div className="telefone" key={index}>
+
+                                    <div className="field">
+                                        <Field name={`telefone[${index}].numero`} placeholder="Número do telefone" />
+                                        <ErrorMessage className="field-error" component="span" name={`telefone[${index}].numero`} />
+                                    </div>
+
+                                    <Field as="select" name={`telefone[${index}].tipoTelefone`} placeholder="Tipo de Telefone">
+                                        {props.tiposTelefone.map((tipoTelefone) => (
+                                            <option key={tipoTelefone.id} value={tipoTelefone.id}>{tipoTelefone.nome}</option>
+                                        ))}
+                                    </Field>
+
+                                    <button type="button" className="remover" onClick={() => index ? arrayHelpers.remove(index) : null}>-</button>
+
+                                </div>
+                            ))}
+
+                            <div className="adicionar">
+                                <button type="button" onClick={() => arrayHelpers.push({ numero: '', tipoTelefone: { id: 1 } })}>
+                                    Adicionar telefone
+                            </button>
+
+                            </div>
+                        </div>
+                    )} />
+                </div>
+
+                <div className="send">
+                    <button type="submit">Enviar</button>
+                </div>
             </Form>
         </div>
     )
@@ -134,7 +189,10 @@ export default class ClienteForm extends React.Component {
 
                 <hr />
 
-                <MyForm tiposTelefone={this.state.tiposTelefone} />
+                <MyForm
+                    tiposTelefone={this.state.tiposTelefone}
+                    handleSubmit={handleSubmit}
+                />
 
                 <Link to="/clientes">Voltar</Link>
             </div>

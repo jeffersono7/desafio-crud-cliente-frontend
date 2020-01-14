@@ -1,53 +1,101 @@
 .cliente-container {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .cliente-container form {
-    width: 100%;
-    max-width: 300px;
-    display: flex;
-    flex-direction: column;
+  width: 100%;
+  max-width: 650px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
-
-.cliente-container form div {
-    width: 100%;
-    max-width: 300px;
-    display: flex;
-    flex-direction: column;
+.field {
+  flex: 1 1;
+  display: flex;
+  flex-direction: column;
 }
 
-.cliente-container form input {
-    margin-top: 20px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    height: 48px;
-    padding: 0 20px;
-    font-size: 16px;
-    color: #666;
+div.send, div.adicionar {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+div.send button {
+  flex: 1;
+  max-width: 100px;
+  background: rgb(0, 131, 59) !important;
+}
+
+.cliente-container form input, .cliente-container form select {
+  margin-top: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  height: 48px;
+  padding: 0 20px;
+  font-size: 16px;
+  color: #666;
 }
 
 .cliente-container form input::placeholder {
-    color: #999;
+  color: #999;
+}
+
+.cliente-container form select {
+  background: rgb(110, 110, 110);
+  color: rgb(245, 245, 245);
+  margin-left: 10px;
 }
 
 .cliente-container form button {
-    margin-top: 10px;
-    border: 0;
-    border-radius: 4px;
-    height: 48px;
-    font-size: 16px;
-    background: #007a99;
-    font-weight: bold;
-    color: #FFF;
-    cursor: pointer;
+  margin-top: 10px;
+  border: 0;
+  border-radius: 4px;
+  height: 48px;
+  font-size: 16px;
+  background: #007a99;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
 }
 
 .titulo {
-    display: flex;
-    justify-content: center;
-    color: rgb(54, 54, 54);
+  display: flex;
+  justify-content: center;
+  color: rgb(54, 54, 54);
+}
+
+.telefones {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+}
+
+.telefones {
+  flex: 1;
+}
+
+.telefone {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+span.field-error {
+  color: rgba(216, 0, 0, 0.87);
+}
+
+button.remover {
+  background: rgba(128, 0, 0, 0.87) !important;
+  min-width: 50px;
+  margin-left: 10px;
 }
